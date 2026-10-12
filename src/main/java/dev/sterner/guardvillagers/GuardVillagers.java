@@ -1,6 +1,7 @@
 package dev.sterner.guardvillagers;
 
 import dev.sterner.guardvillagers.common.entity.GuardEntity;
+import dev.sterner.guardvillagers.common.entity.StructureSpawnedVillager;
 import dev.sterner.guardvillagers.common.network.GuardData;
 import dev.sterner.guardvillagers.common.network.GuardFollowPacket;
 import dev.sterner.guardvillagers.common.network.GuardPatrolPacket;
@@ -27,6 +28,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
@@ -101,7 +103,7 @@ public class GuardVillagers implements ModInitializer {
         UseEntityCallback.EVENT.register(this::villagerConvert);
 
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (entity instanceof Villager villagerEntity && villagerEntity.assignProfessionWhenSpawned()) {
+            if (entity instanceof Villager villagerEntity && ((StructureSpawnedVillager) villagerEntity).guardvillagers$consumeStructureSpawned()) {
                 var spawnChance = Mth.clamp(GuardVillagersConfig.spawnChancePerVillager, 0f, 1f);
                 if (world.getRandom().nextFloat() < spawnChance) {
                     GuardEntity guardEntity = GUARD_VILLAGER.create(world, EntitySpawnReason.MOB_SUMMONED);
@@ -175,7 +177,7 @@ public class GuardVillagers implements ModInitializer {
     }
 
     private void convertVillager(Villager villagerEntity, Player player, Level world) {
-        player.swing(InteractionHand.MAIN_HAND);
+        player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
         ItemStack itemstack = player.getItemBySlot(EquipmentSlot.MAINHAND);
         GuardEntity guard = GUARD_VILLAGER.create(world, EntitySpawnReason.MOB_SUMMONED);
         if (guard == null)
