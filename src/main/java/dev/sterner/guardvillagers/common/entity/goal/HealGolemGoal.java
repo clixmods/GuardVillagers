@@ -4,6 +4,7 @@ import java.util.EnumSet;
 import java.util.List;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -73,7 +74,7 @@ public class HealGolemGoal extends Goal {
         healer.getNavigation().moveTo(golem, 0.5);
         if (healer.distanceTo(golem) <= 2.0D) {
             this.hasStartedHealing = true;
-            healer.swing(InteractionHand.MAIN_HAND);
+            healer.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT);
             golem.heal(15.0F);
             float f1 = 1.0F + (golem.getRandom().nextFloat() - golem.getRandom().nextFloat()) * 0.2F;
             golem.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0F, f1);
